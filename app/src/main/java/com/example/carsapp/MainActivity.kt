@@ -1,12 +1,16 @@
 package com.example.carsapp
 
+import android.content.Context
 import android.graphics.Paint
 import android.os.Bundle
 import android.text.Layout
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -31,7 +35,9 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.focusModifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextOverflow
@@ -61,27 +67,27 @@ class MainActivity : ComponentActivity() {
 fun MyApp(modifier: Modifier) {
     var listOfCars = listOf<Car>(
         Car(
-            title = "Mazda",
+            title = "Ferrari",
             image = R.drawable.img_6,
             description = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."
         ),
         Car(
-            title = "Mazda",
+            title = "KIA",
             image = R.drawable.img,
             description = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."
         ),
         Car(
-            title = "Mazda",
+            title = "Renault",
             image = R.drawable.img_1,
             description = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."
         ),
         Car(
-            title = "Mazda",
+            title = "Nissan",
             image = R.drawable.img_2,
             description = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."
         ),
         Car(
-            title = "Mazda",
+            title = "Toyota",
             image = R.drawable.img_3,
             description = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."
         ),
@@ -91,7 +97,7 @@ fun MyApp(modifier: Modifier) {
             description = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."
         ),
         Car(
-            title = "Mazda",
+            title = "Audi",
             image = R.drawable.img_5,
             description = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."
         ),
@@ -103,15 +109,16 @@ fun MyApp(modifier: Modifier) {
                 .padding(horizontal = 16.dp)
         ) {
             items(count = listOfCars.size) { item ->
-                MyListTile(car = listOfCars[item])
+                MyListTile(car = listOfCars[item], context = LocalContext.current)
             }
         }
     }
 }
 
 
+
 @Composable
-fun MyListTile(car: Car) {
+fun MyListTile(car: Car, context: Context) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -119,6 +126,17 @@ fun MyListTile(car: Car) {
             .clip(CircleShape.copy(all = CornerSize(10.dp)))
             .padding(bottom = 8.dp)
             .alpha(alpha = 0.8f)
+            .clickable() {
+                Toast.makeText(context, "${car.title} is Pressed", Toast.LENGTH_SHORT).show()
+            }
+            .pointerInput(Unit) {
+                detectTapGestures(onLongPress = {
+                    Toast.makeText(context, "${car.title} is long pressed", Toast.LENGTH_SHORT)
+                        .show()
+                })
+
+
+            }
 
     ) {
         Column() {
